@@ -7,7 +7,7 @@ class Substrate {
 	int phosphoState;
 
 	Substrate(int m){
-		location = new PVector(random(0, width), random(0, height));
+		location = new PVector(random(0 + 5*mass, width - 5*mass), random(0 + 5*mass, height-5*mass));
 		velocity = new PVector(0, 0);
 		acceleration = new PVector(0, 0);
 		mass = m;
@@ -41,16 +41,12 @@ class Substrate {
 	}
 
 	void checkEdges(){
-		if(location.x > width || location.x < 0){
+		if(location.x > width - (5*mass) || location.x < 0 + (5*mass)){
 			velocity.x *= -1;
 		}
-		if(location.y > height || location.y < 0){
+		if(location.y > height - (5*mass) || location.y < 0 + (5*mass)){
 			velocity.y *= -1;
 		}
-	}
-
-	void bindReceptor(Receptor r){
-
 	}
 }
 
