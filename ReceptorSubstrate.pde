@@ -6,7 +6,8 @@ int time = 0;
 int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
-Substrate[] sArray = new Substrate[50];
+Substrate[] sArray = new Substrate[1000];
+//Substrate[] iArray = new Substrate[10]; // substrate phosphorylated by phosphorylated substrate of the sArray
 Receptor[] rArray = new Receptor[5];
 
 // Initializing a table object
@@ -15,16 +16,20 @@ Table table;
 void setup() {
 	size(600, 800);
 	noSmooth();
-	pixelDensity(2);
-	frameRate(60);
+	pixelDensity(1);
+	frameRate(250);
 
 	//Initializing the substrates and receptors
 	for(int i = 0; i < sArray.length; i++){
-		sArray[i] = new Substrate(10, 1); // Substrate(diameter, identity = 1 or 2), initial location is random, phosphorylation state set to 0!
+		sArray[i] = new Substrate(20, 1); // Substrate(diameter, identity = 1 or 2), initial location is random, phosphorylation state set to 0!
 	}
 
+	//for(int i = 0; i < iArray.length; i++){
+	//	iArray[i] = new Substrate(15, 2);
+	//}
+
 	for(int i = 0; i < rArray.length; i++){
-		rArray[i] = new Receptor(new PVector(random(width), random(height)), 60); // receptors randomly positioned
+		rArray[i] = new Receptor(new PVector(random(0, width), random(height/2, height)), 60); // receptors randomly positioned
 	}
 
 	//Configuring the table
@@ -61,7 +66,7 @@ void draw() {
 	TableRow newRow = table.addRow();
 	newRow.setInt("time", time);
 	newRow.setInt("[phospho]", amountPhospho);
-	saveTable(table, "data/new.csv");
+	saveTable(table, "data/new2.csv");
 
 
 }

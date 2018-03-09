@@ -13,7 +13,7 @@ class Substrate {
 	int counted; // 1 indicates, that the object has already been counted and written to the table
 
 	Substrate(int d, int i){
-		location = new PVector(random(0 + diameter, width - diameter), random(0 + diameter, height - diameter)); // Substrates can only be created inside the window
+		location = new PVector(random(0 + diameter, width - diameter), random(0 + diameter, height/5)); // Substrates can only be created inside the window
 		velocity = new PVector(0, 0);
 		acceleration = new PVector(0, 0);
 		diameter = d;
@@ -85,8 +85,8 @@ class Substrate {
 		PVector distance = PVector.sub(location, r.position);
 		float distanceMag = distance.mag();
 
-		if(phosphoState == 0 && distanceMag <= minDistance){
-			phosphoState++;
+		while(phosphoState == 0 && distanceMag <= minDistance){
+				phosphoState++;
 		}
 	}
 }
