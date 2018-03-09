@@ -10,6 +10,7 @@ class Substrate {
 	float diffCoef;
 	int phosphoState;
 	int identity;
+	int counted; // 1 indicates, that the object has already been counted and written to the table
 
 	Substrate(int d, int i){
 		location = new PVector(random(0 + diameter, width - diameter), random(0 + diameter, height - diameter)); // Substrates can only be created inside the window
@@ -19,6 +20,7 @@ class Substrate {
 		diffCoef = pow(diameter, -1)*5;
 		phosphoState = 0;
 		identity = i;
+		counted = 0;
 	}
 
 	void display(){
