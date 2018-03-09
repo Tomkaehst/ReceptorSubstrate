@@ -4,7 +4,7 @@ Receptor[] rArray = new Receptor[5];
 void setup() {
 	size(600, 600);
 	noSmooth();
-	pixelDensity(1);
+	pixelDensity(2);
 	frameRate(200);
 
 	for(int i = 0; i < sArray.length; i++){
@@ -18,6 +18,7 @@ void setup() {
 
 void draw() {
 	background(255);
+	fill(125, 125, 125);
 
 	for(Substrate sub : sArray){
 		sub.display();
