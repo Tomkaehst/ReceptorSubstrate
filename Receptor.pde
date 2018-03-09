@@ -9,6 +9,7 @@ class Receptor {
 	}
 
 	void display(){
+		checkEdges();
 		pushMatrix();
 		translate(position.x, position.y);
 		fill(200, 200, 150);
@@ -16,7 +17,18 @@ class Receptor {
 		popMatrix();
 	}
 
-	void boundSubstrate(Substrate s){
-		
+	void checkEdges(){
+		if (position.x > width - diameter){
+			position.x = width - diameter;
+		}
+		else if (position.x < diameter){
+			position.x = diameter;
+		}
+		else if (position.y > height - diameter){
+			position.y = height - diameter;
+		}
+		else if (position.y < diameter){
+			position.y = diameter;
+		}
 	}
 }
