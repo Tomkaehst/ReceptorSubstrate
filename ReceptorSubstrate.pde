@@ -2,11 +2,15 @@
 // This little program works with two classes, one for the receptor and one for the substrate. 
 
 // Initializing the time for writing it to the csv-table.
-float time = 0;
+int time = 0;
+int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
 Substrate[] sArray = new Substrate[50];
 Receptor[] rArray = new Receptor[5];
+
+// Initializing a table object
+Table table;
 
 void setup() {
 	size(600, 800);
@@ -22,6 +26,11 @@ void setup() {
 	for(int i = 0; i < rArray.length; i++){
 		rArray[i] = new Receptor(new PVector(random(width), random(height)), 60); // receptors randomly positioned
 	}
+
+	//Configuring the table
+	table = new Table();
+	table.addColumn("time");
+	table.addColumn("[phospho]");
 }
 
 void draw() {
@@ -38,11 +47,23 @@ void draw() {
 			sub.boundReceptor(rec);
 		}
 	}
-}
 
-// Function, that counts the phosphorylated substrates over time by taking in the array holding the substrate objects and the time. The output is a Vector with the respective time and amount of phosphorylated substrates
-void countPhospho(Substrate s, float time){
-	
+	// Counting the amount of phosphorylated substrate molecules, if it is phosphorylated and never been counted (indicated by the objects variable counted)
+	for(Substrate sub : sArray){
+		if(sub.counted == 0 && sub.phosphoState == 1){
+			amountPhospho += sub.phosphoState;
+			sub.counted++;
+		}
+	}
+	time++;
+
+	// Writing the amount of phosphorylated substrates at time t into a table.
+	TableRow newRow = table.addRow();
+	newRow.setInt("time", time);
+	newRow.setInt("[phospho]", amountPhospho);
+	saveTable(table, "data/new.csv");
+
+
 }
 
 
