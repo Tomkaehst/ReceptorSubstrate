@@ -10,7 +10,6 @@ class Substrate {
 	float diffCoef;
 	int phosphoState;
 	int identity;
-	int counted; // 1 indicates, that the object has already been counted and written to the table
 
 	Substrate(int d, int i){
 		location = new PVector(random(0 + diameter, width - diameter), random(0 + diameter, height/5)); // Substrates can only be created inside the window
@@ -20,7 +19,6 @@ class Substrate {
 		diffCoef = pow(diameter, -1)*5;
 		phosphoState = 0;
 		identity = i;
-		counted = 0;
 	}
 
 	void display(){
@@ -28,10 +26,10 @@ class Substrate {
 		translate(location.x, location.y);
 
 		if(phosphoState == 1) {
-			fill(20, 250, 120);	
+			fill(230);	
 		}
 		else if(phosphoState == 0) {
-			fill(125, 125, 125);
+			fill(40);
 		}
 
 
@@ -55,7 +53,7 @@ class Substrate {
 		velocity.add(acceleration);
 		location.add(velocity);
 		acceleration.mult(0);
-		velocity.mult(0.99);
+		velocity.mult(0.98);
 	}
 
 	PVector diffusion(){
@@ -78,21 +76,69 @@ class Substrate {
 			velocity.y *= -1;
 		}
 	}
+}
 
-	// Checks if the boundaries of a receptor objects overlap with the substrate. If it does it's phosphorylated (but only once!).
-	void boundReceptor(Receptor r){
-		float minDistance = r.diameter/2 + diameter/2;
-		PVector distance = PVector.sub(location, r.position);
+
+class Signal extends Substrate {
+
+	Signal(int d){
+		super(d, 1);
+	}
+
+	void boundReceptor(Substrate m){
+		float minDistance = m.diameter/2 + diameter/2;
+		PVector distance = PVector.sub(location, m.location);
 		float distanceMag = distance.mag();
 
-		while(phosphoState == 0 && distanceMag <= minDistance){
+		if(phosphoState == 0 && distanceMag <= minDistance){
 				phosphoState++;
 		}
 	}
 }
 
+class Inhibitor extends Substrate {
+	Inhibitor(int diam){
+		super(diam, 2);
+	}
+//WRITE A MORE GENERAL FUNCTION FOR DETECTION OF CONTACT AND PHOSPHORYLATION!
+	void boundSignal(Signal s){
+		float minDistance = s.diameter/2 + diameter/2;
+		PVector distance = PVector.sub(location, s.location);
+		float distanceMag = distance.mag();
 
+		// Only phosphorylated inhibitors can dephosphorylate phosphorylated signal molecules
+		if(phosphoState == 1 && s.phosphoState == 1 && phosphoState == 0 && distanceMag <= minDistance){
+			s.phosphoState = 0;
+		}
+	}
 
+	void boundReceptor(Substrate m){
+		float minDistance = m.diameter/2 + diameter/2;
+		PVector distance = PVector.sub(location, m.location);
+		float distanceMag = distance.mag();
+
+		if(m.phosphoState == 1 && distanceMag <= minDistance){
+				phosphoState++;
+		}
+	}
+}
+
+class Receptor extends Substrate {
+	Receptor(PVector p, int d){
+		super(d, 1);
+		location = p.get();
+		diameter = d;
+	}
+
+	void display(){
+		checkEdges();
+		pushMatrix();
+		translate(location.x, location.y);
+		fill(200, 200, 150);
+		ellipse(0, 0, diameter, diameter);
+		popMatrix();
+	}
+}
 
 
 
