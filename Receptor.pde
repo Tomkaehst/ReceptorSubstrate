@@ -1,18 +1,18 @@
 class Receptor {
 
 	PVector position;
-	int radius;
+	int diameter;
 
-	Receptor(PVector pos, int r){
+	Receptor(PVector pos, int d){
 		position = pos.get();
-		radius = r;
+		diameter = d;
 	}
 
 	void display(){
 		pushMatrix();
 		translate(position.x, position.y);
 		fill(200, 200, 150);
-		ellipse(0, 0, radius, radius);
+		ellipse(0, 0, diameter, diameter);
 		popMatrix();
 	}
 

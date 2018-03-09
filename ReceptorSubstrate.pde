@@ -1,25 +1,30 @@
-Substrate[] sArray = new Substrate[25];
-Receptor rec;
+Substrate[] sArray = new Substrate[50];
+Receptor[] rArray = new Receptor[5];
 
 void setup() {
 	size(600, 600);
-	smooth();
-	pixelDensity(displayDensity());
+	noSmooth();
+	pixelDensity(1);
+	frameRate(200);
 
 	for(int i = 0; i < sArray.length; i++){
-		sArray[i] = new Substrate(int(random(2, 5)));
+		sArray[i] = new Substrate(10, 2);
 	}
 
-	rec = new Receptor(new PVector(width/2, height/2), 20);
+	for(int i = 0; i < rArray.length; i++){
+		rArray[i] = new Receptor(new PVector(random(width), random(height)), 60);
+	}
 }
 
 void draw() {
 	background(255);
 
-	for(int i = 0; i < sArray.length; i++){
-		Substrate substrate = sArray[i];
-		substrate.display();
-	}
+	for(Substrate sub : sArray){
+		sub.display();
 
-	rec.display();
+		for(Receptor rec : rArray){
+			rec.display();
+			sub.boundReceptor(rec);
+		}
+	}
 }
