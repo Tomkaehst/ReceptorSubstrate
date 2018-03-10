@@ -7,8 +7,9 @@ int time = 0;
 int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
-Signal[] sArray = new Signal[20];
-Inhibitor[] iArray = new Inhibitor[10];
+Signal[] s1Array = new Signal[350];
+Signal[] s2Array = new Signal[5];
+Inhibitor[] iArray = new Inhibitor[100];
 
 //Substrate[] iArray = new Substrate[10]; // substrate phosphorylated by phosphorylated substrate of the sArray
 Receptor[] rArray = new Receptor[3];
@@ -17,14 +18,18 @@ Receptor[] rArray = new Receptor[3];
 Table signalTable;
 
 void setup() {
-	size(400, 400);
+	size(800, 800);
 	noSmooth();
 	pixelDensity(2);
-	frameRate(50);
+	frameRate(500);
 
 	//Initializing the substrates and receptors
-	for(int i = 0; i < sArray.length; i++){
-		sArray[i] = new Signal(12); // Substrate(diameter, identity = 1 or 2), initial location is random, phosphorylation state set to 0!
+	for(int i = 0; i < s1Array.length; i++){
+		s1Array[i] = new Signal(12); // Substrate(diameter, identity = 1 or 2), initial location is random, phosphorylation state set to 0!
+	}
+
+	for(int i = 0; i < s2Array.length; i++){
+		s2Array[i] = new Signal(20);
 	}
 
 	for(int i = 0; i < iArray.length; i++){
@@ -45,29 +50,36 @@ void draw() {
 	background(20);
 	fill(125, 125, 125);
 
-	// Iterating over each element of the substrate array to display the substrates
-	for(Signal sub : sArray){
-		sub.display();
+	for(Signal s1 : s1Array) {
+		s1.display();
 
-		// iterating (nested) over each element of the receptor array, display the receptor and check, if the active substrate hit a receptor
-		for(Receptor rec : rArray){
-			rec.display();
-			sub.boundReceptor(rec);
+		for(Receptor r : rArray) {
+			r.display();
+			s1.boundReceptor(r, 1);
 		}
 	}
 
-	for(Inhibitor inh : iArray){
-		inh.display();
-		for(Signal sub : sArray){
-			inh.boundReceptor(sub);
-			inh.boundSignal(sub);
+	for(Signal s2 : s2Array){
+		s2.display();
+		for(Signal s1 : s1Array){
+			s2.boundReceptor(s1, 1);
+		}
+	}
+
+	for(Inhibitor i1 : iArray) {
+		i1.display();
+		for(Signal s2 : s2Array) {
+			i1.boundReceptor(s2);
+		}
+		for(Signal s1: s1Array) {
+			i1.dephosphorylate(s1);
 		}
 	}
 
 	// Counting the amount of phosphorylated substrate molecules, if it is phosphorylated and never been counted (indicated by the objects variable counted)
-	for(Signal sub : sArray){
-		if(sub.phosphoState == 1){
-			amountPhospho += sub.phosphoState;
+	for(Signal s1 : s1Array){
+		if(s1.phosphoState == 1){
+			amountPhospho += s1.phosphoState;
 		}
 	}
 

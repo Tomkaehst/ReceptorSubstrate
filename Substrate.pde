@@ -85,16 +85,19 @@ class Signal extends Substrate {
 		super(d, 1);
 	}
 
-	void boundReceptor(Substrate m){
+	void boundReceptor(Substrate m, int checkedState){ //checkedState refers to, which phosphorylation state the input object should have
 		float minDistance = m.diameter/2 + diameter/2;
 		PVector distance = PVector.sub(location, m.location);
 		float distanceMag = distance.mag();
 
-		if(phosphoState == 0 && distanceMag <= minDistance){
+		if(m.phosphoState == checkedState && phosphoState == 0 && distanceMag <= minDistance){
 				phosphoState++;
 		}
 	}
 }
+
+
+
 
 class Inhibitor extends Substrate {
 	Inhibitor(int diam){
@@ -117,8 +120,18 @@ class Inhibitor extends Substrate {
 		PVector distance = PVector.sub(location, m.location);
 		float distanceMag = distance.mag();
 
-		if(m.phosphoState == 1 && distanceMag <= minDistance){
+		if(phosphoState == 0 && m.phosphoState == 1 && distanceMag <= minDistance){
 				phosphoState++;
+		}
+	}
+
+	void dephosphorylate(Substrate m){
+		float minDistance = m.diameter/2 + diameter/2;
+		PVector distance = PVector.sub(location, m.location);
+		float distanceMag = distance.mag();
+
+		if(phosphoState == 1 && m.phosphoState == 1 && distanceMag <= minDistance){
+				m.phosphoState = 0;
 		}
 	}
 }
@@ -128,6 +141,7 @@ class Receptor extends Substrate {
 		super(d, 1);
 		location = p.get();
 		diameter = d;
+		phosphoState = 1;
 	}
 
 	void display(){
