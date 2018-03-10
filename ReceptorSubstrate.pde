@@ -1,18 +1,18 @@
 // This code resembles the first attempt of a simulation of Receptors "phosphorylating" substrates, that randomly walk through the world. The data of the phosphorylation states of the substrates is saved in the data folder of this processing sketch.
 // This little program works with three classes: one for the receptor, one for the signaling molecule and one for the inhibitor of the activated signal molecule.
-// The signal pathway works like this: 1. Signal molecules diffuse to receptors and are phosphorylated/activated (white); 2. The activated signal can be deactivated/dephosphorylated by the inhibitor and thereby reset to the ground state. 
+// Signal Pathway: signal 1 is phosphorylated the receptor, phosphorylated signal 1 phosphorylates signal 2 which is dephosphorylated by the receptor, signal 2 phosphorylates inhibitor 1 which dephosphorylates signal 1 (back to ground state)
 
 // Initializing the time and data for writing it to the csv-table.
 int time = 0;
 int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
-Signal[] s1Array = new Signal[350];
-Signal[] s2Array = new Signal[5];
-Inhibitor[] iArray = new Inhibitor[100];
+Signal[] s1Array = new Signal[700];
+Signal[] s2Array = new Signal[10];
+Inhibitor[] iArray = new Inhibitor[40];
 
 //Substrate[] iArray = new Substrate[10]; // substrate phosphorylated by phosphorylated substrate of the sArray
-Receptor[] rArray = new Receptor[3];
+Receptor[] rArray = new Receptor[5];
 
 // Initializing a table object
 Table signalTable;
@@ -33,7 +33,7 @@ void setup() {
 	}
 
 	for(int i = 0; i < iArray.length; i++){
-		iArray[i] = new Inhibitor(20);
+		iArray[i] = new Inhibitor(10);
 	}
 
 	for(int i = 0; i < rArray.length; i++){
@@ -47,7 +47,8 @@ void setup() {
 }
 
 void draw() {
-	background(20);
+	background(15);
+	clip(0, 0, 0, 0);
 	fill(125, 125, 125);
 
 	for(Signal s1 : s1Array) {
@@ -64,6 +65,9 @@ void draw() {
 		for(Signal s1 : s1Array){
 			s2.boundReceptor(s1, 1);
 		}
+		for(Receptor r : rArray){
+			r.dephosphorylate(s2);
+		}
 	}
 
 	for(Inhibitor i1 : iArray) {
@@ -73,6 +77,9 @@ void draw() {
 		}
 		for(Signal s1: s1Array) {
 			i1.dephosphorylate(s1);
+		}
+		for(Receptor r : rArray){
+			r.dephosphorylate(i1);
 		}
 	}
 

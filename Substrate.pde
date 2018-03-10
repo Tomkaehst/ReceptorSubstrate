@@ -25,10 +25,14 @@ class Substrate {
 		pushMatrix();
 		translate(location.x, location.y);
 
-		if(phosphoState == 1) {
-			fill(230);	
+		if(phosphoState == 1 && identity == 2) {
+			fill(255, 52, 61);	
 		}
-		else if(phosphoState == 0) {
+		else if(phosphoState == 0 && identity == 2) {
+			fill(50);
+		} else if(phosphoState == 1 && identity == 1){
+			fill(26, 172, 255);
+		} else if(phosphoState == 0 && identity == 1){
 			fill(40);
 		}
 
@@ -151,6 +155,16 @@ class Receptor extends Substrate {
 		fill(200, 200, 150);
 		ellipse(0, 0, diameter, diameter);
 		popMatrix();
+	}
+
+	void dephosphorylate(Substrate inh){
+		float minDistance = inh.diameter/2 + diameter/2;
+		PVector distance = PVector.sub(location, inh.location);
+		float distanceMag = distance.mag();
+
+		if(phosphoState == 1 && distanceMag <= minDistance){
+				inh.phosphoState = 0;
+		}
 	}
 }
 
