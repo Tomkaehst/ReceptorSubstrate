@@ -8,8 +8,8 @@ int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
 Signal[] s1Array = new Signal[700];
-Signal[] s2Array = new Signal[10];
-Inhibitor[] iArray = new Inhibitor[40];
+Signal[] s2Array = new Signal[30];
+Inhibitor[] iArray = new Inhibitor[15];
 
 //Substrate[] iArray = new Substrate[10]; // substrate phosphorylated by phosphorylated substrate of the sArray
 Receptor[] rArray = new Receptor[5];
@@ -33,7 +33,7 @@ void setup() {
 	}
 
 	for(int i = 0; i < iArray.length; i++){
-		iArray[i] = new Inhibitor(10);
+		iArray[i] = new Inhibitor(5);
 	}
 
 	for(int i = 0; i < rArray.length; i++){
