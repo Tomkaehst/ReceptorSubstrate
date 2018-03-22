@@ -20,8 +20,7 @@ Table signalTable;
 void setup() {
 	size(800, 800);
 	noSmooth();
-	pixelDensity(2);
-	frameRate(500);
+	frameRate(50);
 
 	//Initializing the substrates and receptors
 	for(int i = 0; i < s1Array.length; i++){
@@ -48,7 +47,7 @@ void setup() {
 
 void draw() {
 	background(15);
-	clip(0, 0, 0, 0);
+	//clip(0, 0, 0, 0);
 	fill(125, 125, 125);
 
 	for(Signal s1 : s1Array) {
@@ -100,5 +99,3 @@ void draw() {
 	amountPhospho = 0;
 
 }
-
-
