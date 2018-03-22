@@ -20,7 +20,7 @@ Table signalTable;
 void setup() {
 	size(800, 800);
 	noSmooth();
-	pixelDensity(2);
+	pixelDensity(displayDensity());
 	frameRate(500);
 
 	//Initializing the substrates and receptors
@@ -100,5 +100,3 @@ void draw() {
 	amountPhospho = 0;
 
 }
-
-
