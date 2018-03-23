@@ -36,8 +36,8 @@ class Substrate {
 			fill(40);
 		}
 
-
 		noStroke();
+
 		if(identity == 1){ 
 			ellipse(0, 0, diameter, diameter);
 		}
@@ -46,23 +46,18 @@ class Substrate {
 		}
 		
 		popMatrix();
-
 		diffuse();
 		checkEdges();
 	}
 
+
 	void diffuse(){
-		PVector dir = diffusion();
+		PVector dir = new PVector(randomGaussian() * diffCoef, randomGaussian() * diffCoef);
 		acceleration.add(dir);
 		velocity.add(acceleration);
 		location.add(velocity);
 		acceleration.mult(0);
 		velocity.mult(0.98);
-	}
-
-	PVector diffusion(){
-		PVector diff = new PVector(randomGaussian() * diffCoef, randomGaussian() * diffCoef);
-		return diff;
 	}
 
 	void checkEdges(){
@@ -80,6 +75,36 @@ class Substrate {
 			velocity.y *= -1;
 		}
 	}
+
+
+	void phosphorylate(Substrate s){
+		float minDistance = s.diameter/2 + diameter / 2;
+		PVector distance = PVector.sub(location, s.location);
+		float distanceMag = distance.mag();
+		int contact = 0;
+
+		if(phosphoState == 1 && s.phosphoState == 0 && distanceMag <= minDistance && contact == 0){
+			s.phosphoState++;
+			contact++;
+		} else if(contact == 1 && distanceMag <= minDistance){
+			contact = 0;
+		}
+	}
+
+	void dephosphorylate(Substrate s){
+		float minDistance = s.diameter/2 + diameter / 2;
+		PVector distance = PVector.sub(location, s.location);
+		float distanceMag = distance.mag();
+		int contact = 0;
+
+		if(phosphoState == 1 && s.phosphoState == 1 && distanceMag <= minDistance && contact == 0){
+			s.phosphoState = 0;
+			phosphoState = 0;
+			contact = 1;
+		} else if(contact == 1 && distanceMag <= minDistance){
+			contact = 0;
+		}
+	}
 }
 
 
@@ -87,16 +112,6 @@ class Signal extends Substrate {
 
 	Signal(int d){
 		super(d, 1);
-	}
-
-	void boundReceptor(Substrate m, int checkedState){ //checkedState refers to, which phosphorylation state the input object should have
-		float minDistance = m.diameter/2 + diameter/2;
-		PVector distance = PVector.sub(location, m.location);
-		float distanceMag = distance.mag();
-
-		if(m.phosphoState == checkedState && phosphoState == 0 && distanceMag <= minDistance){
-				phosphoState++;
-		}
 	}
 }
 
@@ -107,38 +122,11 @@ class Inhibitor extends Substrate {
 	Inhibitor(int diam){
 		super(diam, 2);
 	}
-//WRITE A MORE GENERAL FUNCTION FOR DETECTION OF CONTACT AND PHOSPHORYLATION!
-	void boundSignal(Signal s){
-		float minDistance = s.diameter/2 + diameter/2;
-		PVector distance = PVector.sub(location, s.location);
-		float distanceMag = distance.mag();
-
-		// Only phosphorylated inhibitors can dephosphorylate phosphorylated signal molecules
-		if(phosphoState == 1 && s.phosphoState == 1 && phosphoState == 0 && distanceMag <= minDistance){
-			s.phosphoState = 0;
-		}
-	}
-
-	void boundReceptor(Substrate m){
-		float minDistance = m.diameter/2 + diameter/2;
-		PVector distance = PVector.sub(location, m.location);
-		float distanceMag = distance.mag();
-
-		if(phosphoState == 0 && m.phosphoState == 1 && distanceMag <= minDistance){
-				phosphoState++;
-		}
-	}
-
-	void dephosphorylate(Substrate m){
-		float minDistance = m.diameter/2 + diameter/2;
-		PVector distance = PVector.sub(location, m.location);
-		float distanceMag = distance.mag();
-
-		if(phosphoState == 1 && m.phosphoState == 1 && distanceMag <= minDistance){
-				m.phosphoState = 0;
-		}
-	}
 }
+
+
+
+
 
 class Receptor extends Substrate {
 	Receptor(PVector p, int d){
@@ -155,16 +143,6 @@ class Receptor extends Substrate {
 		fill(200, 200, 150);
 		ellipse(0, 0, diameter, diameter);
 		popMatrix();
-	}
-
-	void dephosphorylate(Substrate inh){
-		float minDistance = inh.diameter/2 + diameter/2;
-		PVector distance = PVector.sub(location, inh.location);
-		float distanceMag = distance.mag();
-
-		if(phosphoState == 1 && distanceMag <= minDistance){
-				inh.phosphoState = 0;
-		}
 	}
 }
 

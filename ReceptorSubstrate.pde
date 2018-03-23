@@ -7,37 +7,33 @@ int time = 0;
 int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
-Signal[] s1Array = new Signal[700];
-Signal[] s2Array = new Signal[30];
-Inhibitor[] iArray = new Inhibitor[15];
+Signal[] s1Array = new Signal[300];
+Inhibitor[] iArray = new Inhibitor[150];
 
 //Substrate[] iArray = new Substrate[10]; // substrate phosphorylated by phosphorylated substrate of the sArray
-Receptor[] rArray = new Receptor[5];
+Receptor[] rArray = new Receptor[15];
 
 // Initializing a table object
 Table signalTable;
 
 void setup() {
-	size(800, 800);
+	size(1280, 1024);
 	noSmooth();
 	pixelDensity(displayDensity());
-	frameRate(500);
+	frameRate(10000);
 
 	//Initializing the substrates and receptors
 	for(int i = 0; i < s1Array.length; i++){
 		s1Array[i] = new Signal(12); // Substrate(diameter, identity = 1 or 2), initial location is random, phosphorylation state set to 0!
 	}
 
-	for(int i = 0; i < s2Array.length; i++){
-		s2Array[i] = new Signal(20);
-	}
-
 	for(int i = 0; i < iArray.length; i++){
-		iArray[i] = new Inhibitor(5);
+		iArray[i] = new Inhibitor(14);
 	}
 
 	for(int i = 0; i < rArray.length; i++){
-		rArray[i] = new Receptor(new PVector(random(0, width), random(height/2, height)), 60); // receptors randomly positioned
+		PVector pos = new PVector(random(0, width), random(0, height));
+		rArray[i] = new Receptor(pos, 16);
 	}
 
 	//Configuring the table
@@ -48,40 +44,25 @@ void setup() {
 
 void draw() {
 	background(15);
-	clip(0, 0, 0, 0);
 	fill(125, 125, 125);
 
-	for(Signal s1 : s1Array) {
-		s1.display();
-
-		for(Receptor r : rArray) {
-			r.display();
-			s1.boundReceptor(r, 1);
-		}
-	}
-
-	for(Signal s2 : s2Array){
-		s2.display();
+	for(Receptor r : rArray){
+		r.display();
 		for(Signal s1 : s1Array){
-			s2.boundReceptor(s1, 1);
+			r.phosphorylate(s1);
+			s1.display();
 		}
-		for(Receptor r : rArray){
-			r.dephosphorylate(s2);
+
+		for(Inhibitor i : iArray){
+			i.display();
+			r.phosphorylate(i);
+			for(Signal s1 : s1Array) {
+				i.dephosphorylate(s1);
+				s1.dephosphorylate(i);
+			}
 		}
 	}
 
-	for(Inhibitor i1 : iArray) {
-		i1.display();
-		for(Signal s2 : s2Array) {
-			i1.boundReceptor(s2);
-		}
-		for(Signal s1: s1Array) {
-			i1.dephosphorylate(s1);
-		}
-		for(Receptor r : rArray){
-			r.dephosphorylate(i1);
-		}
-	}
 
 	// Counting the amount of phosphorylated substrate molecules, if it is phosphorylated and never been counted (indicated by the objects variable counted)
 	for(Signal s1 : s1Array){
