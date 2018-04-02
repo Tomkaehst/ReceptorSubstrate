@@ -7,20 +7,21 @@ int time = 0;
 int amountPhospho = 0;
 
 //Calling the receptor and substrate object arrays
-Signal[] s1Array = new Signal[300];
-Inhibitor[] iArray = new Inhibitor[150];
+Signal[] s1Array = new Signal[30];
+Inhibitor[] iArray = new Inhibitor[10];
 
 //Substrate[] iArray = new Substrate[10]; // substrate phosphorylated by phosphorylated substrate of the sArray
-Receptor[] rArray = new Receptor[15];
+Receptor[] rArray = new Receptor[5];
 
 // Initializing a table object
 Table signalTable;
 
+
 void setup() {
-	size(1280, 1024);
+	size(720, 720);
 	noSmooth();
 	pixelDensity(displayDensity());
-	frameRate(10000);
+	frameRate(120);
 
 	//Initializing the substrates and receptors
 	for(int i = 0; i < s1Array.length; i++){
@@ -55,6 +56,7 @@ void draw() {
 
 		for(Inhibitor i : iArray){
 			i.display();
+			i.activityDecay(1);
 			r.phosphorylate(i);
 			for(Signal s1 : s1Array) {
 				i.dephosphorylate(s1);

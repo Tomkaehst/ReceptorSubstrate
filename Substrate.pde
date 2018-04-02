@@ -10,6 +10,7 @@ class Substrate {
 	float diffCoef;
 	int phosphoState;
 	int identity;
+	float time;
 
 	Substrate(int d, int i){
 		location = new PVector(random(0 + diameter, width - diameter), random(0 + diameter, height/5)); // Substrates can only be created inside the window
@@ -19,6 +20,7 @@ class Substrate {
 		diffCoef = pow(diameter, -1)*5;
 		phosphoState = 0;
 		identity = i;
+		time = 0;
 	}
 
 	void display(){
@@ -73,6 +75,16 @@ class Substrate {
 		} else if(location.y < diameter){
 			location.y = diameter;
 			velocity.y *= -1;
+		}
+	}
+
+	// Function, that inactivates a substrate after a specified amount of frames
+	void activityDecay(int eventTime) {
+		time++;
+
+		if(time > eventTime) {
+			phosphoState = 0;
+			time = 0;
 		}
 	}
 
